@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import json
 import logging
 import pickle
@@ -121,7 +122,7 @@ def start_fetching_states():
 
 def get_state():
     with open("states.json") as f:
-        return json.load(f)
+        return collections.OrderedDict(json.load(f))
 
 def save_state(states):
     with open("states.json", "w+") as f:
