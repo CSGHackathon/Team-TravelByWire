@@ -45,11 +45,13 @@
             </div>
             <form action='/addifthen' method='POST'>
                 <select name="if">
+                    <option value=""></option>
                     {% for x in ifs %}
                     <option name="{{x}}" value="{{x}}">{{x}}</option>
                     {% endfor %}
                 </select>
                 <select name="then">
+                    <option value=""></option>
                     {% for x in thens %}
                     <option name="{{x}}" value="{{x}}">{{x}}</option>
                     {% endfor %}
