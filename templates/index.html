@@ -6,39 +6,18 @@
         <h1 class="page-header">Dashboard</h1>
 
         <div class="row placeholders">
+            {% for k,v in devices.items() %}
             <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if projector['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="projector" class="circle {% if projector['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
+                <a href="/?device={{k}}&state={% if v['state'] == True %}off{% else %}on{% endif %}">
+                    <div id="{{k}}" class="circle {% if v['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
                 </a>
-                <h4>Projector</h4>
+                <h4>{{k}}</h4>
                 <span class="text-muted">on</span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if light1['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="light1" class="circle {% if light1['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Light 1</h4>
-                <span class="text-muted">off</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=light2&state=on">
-                <a href="/?device=projector&state={% if light2['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="light2" class="circle {% if light2['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Light 2</h4>
-                <span class="text-muted">on</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if projector['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="projector" class="circle {% if light2['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Label</h4>
-                <span class="text-muted">on</span>
-            </div>
+            {% endfor %}
         </div>
 
         <h2 class="sub-header">Rules</h2>
-        <form>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -48,79 +27,35 @@
                             <th>This</th>
                             <th></th>
                             <th>That</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for pair in ifthens %}
                         <tr>
                             <td>If</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
+                            <td>{{pair[0]}}</td>
                             <td>then</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
+                            <td>{{pair[1]}}</td>
+                            <td><a href="/removeifthen?if={{pair[0]}}&then={{pair[1]}}">delete</a></td>
                         </tr>
-                        <tr>
-                            <td>If</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
-                            <td>then</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>If</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
-                            <td>then</td>
-                            <td>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="projector_on">Projector on</option>
-                                    <option value="projector_off">Projector off</option>
-                                    <option value="light1_on">Light1 on</option>
-                                    <option value="light1_off">Light1 off</option>
-                                </select>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
-        </form>
             </div>
+            <form action='/addifthen' method='POST'>
+                <select name="if">
+                    {% for x in ifs %}
+                    <option name="{{x}}" value="{{x}}">{{x}}</option>
+                    {% endfor %}
+                </select>
+                <select name="then">
+                    {% for x in thens %}
+                    <option name="{{x}}" value="{{x}}">{{x}}</option>
+                    {% endfor %}
+                </select>
+                <input type='submit'></input>
+            </form>
     </div>
 </div>
 </div>

@@ -42,6 +42,24 @@ device_states = {
     }
 }
 
+action_pairs = []
+
+if_conditions = []
+then_actions = {}
+
+for device in device_states :
+    then_actions[device+"_on"] = device_states[device]["on"]
+    then_actions[device+"_off"] = device_states[device]["off"]
+    then_actions[device+"_toggle"] = lambda : device_states[device]["off"] if device_states[device]["state"] else device_states[device]["off"]
+    if_conditions.append(device+"_on")
+    if_conditions.append(device+"_off")
+
+def send_event(evtname) :
+    print("EVENT !"+evtname)
+    for x in action_pairs :
+        if x[0] == evtname :
+            then_actions[x[1]]()
+
 @app.route('/')
 def index():
     refresh_states()
@@ -58,12 +76,30 @@ def index():
 
         device_states[target_device]['state'] = device_states[target_device]['is_on']()
 
-    return render_template("index.html", **device_states)
+    return render_template("index.html", devices=device_states, ifthens=action_pairs, ifs=if_conditions, thens=then_actions.keys())
 
+
+@app.route('/addifthen',methods=["POST"])
+def addifthen():
+    print(request.form)
+    action_pairs.append((request.form['if'],request.form['then']))
+    return redirect('/')
+@app.route('/removeifthen',methods=["GET"])
+def removeifthen():
+    for x in action_pairs :
+        if x[0] == request.args["if"] and x[1] ==request.args["then"] :
+            action_pairs.remove(x)
+            break
+    return redirect('/')
 
 def refresh_states():
     for device in device_states:
-        device_states[device]['state'] = device_states[device]["is_on"]()
+        prev = device_states[device]['state'] 
+        new = device_states[device]['state'] = device_states[device]["is_on"]()
+        if prev and not new :
+            send_event(device+"_off")
+        elif new and not prev :
+            send_event(device+"_on")
 
 @app.route("/status")
 def status():
