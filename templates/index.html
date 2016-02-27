@@ -7,22 +7,31 @@
 
         <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-                <div class="circle on" class="img-responsive"></div>
+                <a href="/?device=projector&state={% if projector == True %}off{% else %}on{% endif %}">
+                    <div class="circle {% if projector == True %}off{% else %}on{% endif %}" class="img-responsive"></div>
+                </a>
                 <h4>Projector</h4>
                 <span class="text-muted">on</span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-                <div class="circle off" class="img-responsive"></div>
+                <a href="/?device=projector&state={% if light1 == True %}off{% else %}on{% endif %}">
+                    <div class="circle {% if light1 == True %}off{% else %}on{% endif %}" class="img-responsive"></div>
+                </a>
                 <h4>Light 1</h4>
                 <span class="text-muted">off</span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-                <div class="circle on" class="img-responsive"></div>
+                <a href="/?device=light2&state=on">
+                <a href="/?device=projector&state={% if light2 == True %}off{% else %}on{% endif %}">
+                    <div class="circle {% if light2 == True %}off{% else %}on{% endif %}" class="img-responsive"></div>
+                </a>
                 <h4>Light 2</h4>
                 <span class="text-muted">on</span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-                <div class="circle on" class="img-responsive"></div>
+                <a href="/?device=projector&state={% if projector == True %}off{% else %}on{% endif %}">
+                    <div class="circle {% if light2 == True %}off{% else %}on{% endif %}" class="img-responsive"></div>
+                </a>
                 <h4>Label</h4>
                 <span class="text-muted">on</span>
             </div>
