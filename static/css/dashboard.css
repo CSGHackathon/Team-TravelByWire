@@ -99,27 +99,29 @@ body {
 .placeholder {
     margin-bottom: 20px;
 }
-.placeholder img {
+/*.placeholder img {
     display: inline-block;
     border-radius: 50%;
 }
-
+*/
 .circle {
-    width: 200px;
-    height: 200px;
-    -webkit-border-radius: 100px;
-    -moz-border-radius: 100px;
-    border-radius: 100px;
-    max-width:100%;
-    vertical-align:middle;
-    display:inline-block;
+    /*width: 200px;*/
+    /*height: 200px;*/
+    /*-webkit-border-radius: 100px;*/
+    /*-moz-border-radius: 100px;*/
+    /*border-radius: 100px;*/
+    /*max-width:100%;*/
+    /*vertical-align:middle;*/
+    /*display:inline-block;*/
 }
 
 .on {
-    background: green;
+    content: url("../img/on.png");
+    /*background: green;*/
 }
 
 .off {
-    background: red;
+    content: url("../img/off.png");
+    /*background: red;*/
 }
 

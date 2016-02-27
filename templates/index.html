@@ -9,7 +9,8 @@
             {% for k, v in devices.items() %}
             <div class="col-xs-6 col-sm-3 placeholder">
                 <a onclick="toggle('{{k}}')" >
-                    <div id="{{k}}" class="circle" class="img-responsive"></div>
+                    <!-- <div id="{{k}}" class="circle" class="img-responsive"></div> -->
+                    <img id="{{k}}" class="circle" class="img-responsive" src="img/off.png"></img>
                 </a>
                 <h4 class=".{{k}}-title">{{k}}</h4>
                 <span class="text-muted">on</span>

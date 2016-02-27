@@ -2,6 +2,9 @@ statusTimer()
 var myVar = setInterval(statusTimer, 1000);
 states = null;
 
+var onImageURI  = "img/on.png"
+var offImageURI = "img/off.png"
+
 function statusTimer() {
     $.get( "/status", function( data ) {
         console.log("state: " + data)
