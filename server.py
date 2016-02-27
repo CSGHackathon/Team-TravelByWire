@@ -2,6 +2,7 @@
 
 import json
 import logging
+import pickle
 import sys
 import threading
 import time
@@ -17,25 +18,23 @@ app = Flask(__name__)
 PROJECTOR_URL_POWER = "http://raspberrycake.lan/SEND_ONCE/projector.conf/KEY_POWER"
 PROJECTOR_URL_STATUS = "http://yesbot.lan"
 
-LIGHT1_URL_ON = "http://localhost:8000"
-LIGHT1_URL_OFF = "http://localhost:8000"
+LIGHT1_URL_ON = "http://tinylamp/on"
+LIGHT1_URL_OFF = "http://tinylamp/off"
+LIGHT1_URL_STATUS = "http://tinylamp.lan"
 
 LIGHT2_URL_ON = "http://localhost:8000"
 LIGHT2_URL_OFF = "http://localhost:8000"
 
-device_states = {
+device_actions = {
     "projector": {
-        "state": False,
         "on": lambda: requests.get(PROJECTOR_URL_POWER),
         "off": lambda: requests.get(PROJECTOR_URL_POWER),
         "is_on": lambda: get(PROJECTOR_URL_STATUS, 1).status_code == 200
     }, "light1": {
-        "state": False,
         "on": lambda: requests.get(LIGHT1_URL_ON),
-        "off": lambda: request.get(LIGHT1_URL_OFF),
-        "is_on": lambda: False
+        "off": lambda: requests.get(LIGHT1_URL_OFF),
+        "is_on": lambda: get(LIGHT1_URL_STATUS, 1).text == "on"
     }, "light2": {
-        "state": False,
         "on": lambda: requests.get(LIGHT2_URL_ON),
         "off": lambda: request.get(LIGHT2_URL_OFF),
         "is_on": lambda: False
@@ -47,10 +46,10 @@ action_pairs = []
 if_conditions = []
 then_actions = {}
 
-for device in device_states :
-    then_actions[device+"_on"] = device_states[device]["on"]
-    then_actions[device+"_off"] = device_states[device]["off"]
-    then_actions[device+"_toggle"] = lambda : device_states[device]["off"] if device_states[device]["state"] else device_states[device]["off"]
+for device in device_actions :
+    then_actions[device+"_on"] = device_actions[device]["on"]
+    then_actions[device+"_off"] = device_actions[device]["off"]
+    then_actions[device+"_toggle"] = lambda : device_actions[device]["off"] if device_actions[device]["state"] else device_actions[device]["off"]
     if_conditions.append(device+"_on")
     if_conditions.append(device+"_off")
 
@@ -62,22 +61,20 @@ def send_event(evtname) :
 
 @app.route('/')
 def index():
-    refresh_states()
-    target_device = new_state = None
+    return render_template("index.html", devices=device_actions, ifthens=action_pairs, ifs=if_conditions, thens=then_actions.keys())
 
+@app.route('/toggle')
+def toggle():
     if 'device' in request.args:
         target_device = request.args['device']
     if 'state' in request.args:
         new_state = request.args['state']
 
     if target_device is not None and new_state is not None:
-        if target_device in device_states:
-            device_states[target_device][new_state]()
-
-        device_states[target_device]['state'] = device_states[target_device]['is_on']()
-
-    return render_template("index.html", devices=device_states, ifthens=action_pairs, ifs=if_conditions, thens=then_actions.keys())
-
+        if target_device in device_actions:
+            print("Turning {} {}".format(target_device, new_state))
+            device_actions[target_device][new_state]()
+    return ""
 
 @app.route('/addifthen',methods=["POST"])
 def addifthen():
@@ -93,17 +90,20 @@ def removeifthen():
     return redirect('/')
 
 def refresh_states():
-    for device in device_states:
-        prev = device_states[device]['state'] 
-        new = device_states[device]['state'] = device_states[device]["is_on"]()
-        if prev and not new :
+    old_states = get_state()
+    new_states = {}
+    for device in device_actions:
+        new_states[device] = device_actions[device]["is_on"]()
+        if old_states[device] and not new_states[device] :
             send_event(device+"_off")
-        elif new and not prev :
+        if not old_states[device] and new_states[device] :
             send_event(device+"_on")
+    save_state(new_states)
 
 @app.route("/status")
 def status():
-    return json.dumps({ x:y['state'] for x, y in device_states.items() })
+    with open("states.json") as f:
+        return "".join(f.readlines())
 
 
 @app.route('/js/<remainder>',methods=['GET'])
@@ -114,13 +114,33 @@ def get_static(remainder):
 
 def start_fetching_states():
     def fetch_states():
-        print("Fetching states")
-        threading.Timer(3.0, fetch_states).start()
+        threading.Timer(1.0, fetch_states).start()
         refresh_states()
     fetch_states()
 
-if __name__ == "__main__":
+def get_state():
+    with open("states.json") as f:
+        return json.load(f)
+
+def save_state(states):
+    with open("states.json", "w+") as f:
+        json.dump(states, f)
+
+def _setup():
+    init_states = {
+        "projector": False,
+        "light1": False,
+        "light2": False,
+    }
+
+    with open("states.json", 'w+') as f:
+        json.dump(init_states, f)
+
     logging.basicConfig(level=logging.ERROR)
-    print("server up")
     start_fetching_states()
-    app.run(host="0.0.0", debug=True)
+
+
+if __name__ == "__main__":
+    _setup()
+    print("server up")
+    app.run(host="0.0.0.0", debug=True)

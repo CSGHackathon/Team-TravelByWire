@@ -6,12 +6,12 @@
         <h1 class="page-header">Dashboard</h1>
 
         <div class="row placeholders">
-            {% for k,v in devices.items() %}
+            {% for k, v in devices.items() %}
             <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device={{k}}&state={% if v['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="{{k}}" class="circle {% if v['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
+                <a onclick="toggle('{{k}}')" >
+                    <div id="{{k}}" class="circle" class="img-responsive"></div>
                 </a>
-                <h4>{{k}}</h4>
+                <h4 class=".{{k}}-title">{{k}}</h4>
                 <span class="text-muted">on</span>
             </div>
             {% endfor %}

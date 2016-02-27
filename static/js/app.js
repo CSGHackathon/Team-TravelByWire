@@ -1,8 +1,10 @@
-var myVar = setInterval(statusTimer, 2000);
+statusTimer()
+var myVar = setInterval(statusTimer, 1000);
+states = null;
 
 function statusTimer() {
     $.get( "/status", function( data ) {
-        console.log("status msg")
+        console.log("state: " + data)
         states = JSON.parse(data);
         for (var device in states) {
             state = states[device];
@@ -15,4 +17,16 @@ function statusTimer() {
             }
         }
     });
+}
+
+function toggle(device){
+    console.log("Toggling: " + device)
+    var new_state = null;
+    if (states['light1'] == true){
+        new_state = "off"
+    }else{
+        new_state = "on"
+    }
+
+    $.get( "/toggle?device=" + device + "&state=" + new_state);
 }
