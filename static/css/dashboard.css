@@ -115,6 +115,8 @@ body {
     /*display:inline-block;*/
 }
 
+/* Pictures from http://naldzgraphics.net/freebies/free-psd-toggle-swithcges/ */
+/* http://image.naldzgraphics.net/2013/03/12-twelve-toggle-switches.jpg */
 .on {
     content: url("../img/on.png");
     /*background: green;*/
