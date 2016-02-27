@@ -22,8 +22,9 @@ LIGHT1_URL_ON = "http://tinylamp/on"
 LIGHT1_URL_OFF = "http://tinylamp/off"
 LIGHT1_URL_STATUS = "http://tinylamp.lan"
 
-LIGHT2_URL_ON = "http://localhost:8000"
-LIGHT2_URL_OFF = "http://localhost:8000"
+FAN1_URL_ON = "http://fan.lan/on"
+FAN1_URL_OFF = "http://fan.lan/off"
+FAN1_URL_STATUS = "http://fan.lan"
 
 device_actions = {
     "projector": {
@@ -34,10 +35,10 @@ device_actions = {
         "on": lambda: requests.get(LIGHT1_URL_ON),
         "off": lambda: requests.get(LIGHT1_URL_OFF),
         "is_on": lambda: get(LIGHT1_URL_STATUS, 1).text == "on"
-    }, "light2": {
-        "on": lambda: requests.get(LIGHT2_URL_ON),
-        "off": lambda: request.get(LIGHT2_URL_OFF),
-        "is_on": lambda: False
+    }, "fan1": {
+        "on": lambda: requests.get(FAN1_URL_ON),
+        "off": lambda: requests.get(FAN1_URL_OFF),
+        "is_on": lambda: get(FAN1_URL_STATUS, 1).text == "on"
     }
 }
 
@@ -131,6 +132,7 @@ def _setup():
         "projector": False,
         "light1": False,
         "light2": False,
+        "fan1": False
     }
 
     with open("states.json", 'w+') as f:

@@ -22,7 +22,7 @@ function statusTimer() {
 function toggle(device){
     console.log("Toggling: " + device)
     var new_state = null;
-    if (states['light1'] == true){
+    if (states[device] == true){
         new_state = "off"
     }else{
         new_state = "on"
