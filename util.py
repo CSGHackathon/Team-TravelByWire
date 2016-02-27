@@ -2,6 +2,7 @@ import requests
 
 class MockFailure:
     status_code = 500
+    output = ""
 
 def get(url, timeout=60):
     try:

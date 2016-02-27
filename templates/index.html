@@ -6,35 +6,15 @@
         <h1 class="page-header">Dashboard</h1>
 
         <div class="row placeholders">
+            {% for k, v in devices.items() %}
             <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if projector['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="projector" class="circle {% if projector['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
+                <a onclick="toggle('{{k}}')" >
+                    <div id="{{k}}" class="circle" class="img-responsive"></div>
                 </a>
-                <h4>Projector</h4>
+                <h4 class=".{{k}}-title>{{k}}</h4>
                 <span class="text-muted">on</span>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if light1['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="light1" class="circle {% if light1['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Light 1</h4>
-                <span class="text-muted">off</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=light2&state=on">
-                <a href="/?device=projector&state={% if light2['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="light2" class="circle {% if light2['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Light 2</h4>
-                <span class="text-muted">on</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-                <a href="/?device=projector&state={% if projector['state'] == True %}off{% else %}on{% endif %}">
-                    <div id="projector" class="circle {% if light2['state'] == True %}on{% else %}off{% endif %}" class="img-responsive"></div>
-                </a>
-                <h4>Label</h4>
-                <span class="text-muted">on</span>
-            </div>
+            {% endfor %}
         </div>
 
         <h2 class="sub-header">Rules</h2>
