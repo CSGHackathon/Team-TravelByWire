@@ -2,6 +2,16 @@
 import BaseHTTPServer
 import subprocess
 import json
+import RPi.GPIO as gpio
+from threading import Timer
+
+gpio.setmode(gpio.BOARD)
+gpio.setup(12, gpio.OUT)
+
+pin = gpio.PWM(12, 1200)
+
+def stopbuzz():
+    pin.stop()
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler) :
     def do_HEAD(self):
@@ -13,6 +23,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler) :
         components = filter(lambda x : x != "",path.split("/"))
         print(components)
         subprocess.call(["irsend"]+components)
+        pin.start(1)
+        Timer(.25, stopbuzz, ()).start()
         self.send_response(200)
         self.end_headers()
 
@@ -24,3 +36,4 @@ try :
 except KeyboardInterrupt :
     pass
 server.server_close()
+gpio.cleanup()
