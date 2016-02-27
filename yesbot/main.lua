@@ -1,0 +1,8 @@
+srv = net.createServer(net.TCP, 30)
+srv:listen(80,function(conn)
+    conn:on('receive', function(conn,payload)
+        conn:send('HTTP/1.1 200 OK\n\n')
+        conn:send('yes')
+        conn:on('sent',function(conn) conn:close() end)
+    end)
+end)
