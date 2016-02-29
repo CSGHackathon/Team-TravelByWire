@@ -118,11 +118,13 @@ body {
 /* Pictures from http://naldzgraphics.net/freebies/free-psd-toggle-swithcges/ */
 /* http://image.naldzgraphics.net/2013/03/12-twelve-toggle-switches.jpg */
 .on {
+    /* http://stackoverflow.com/questions/17705768/is-it-possible-to-change-img-src-attribute-using-css */
     content: url("../img/on.png");
     /*background: green;*/
 }
 
 .off {
+    /* http://stackoverflow.com/questions/17705768/is-it-possible-to-change-img-src-attribute-using-css */
     content: url("../img/off.png");
     /*background: red;*/
 }
